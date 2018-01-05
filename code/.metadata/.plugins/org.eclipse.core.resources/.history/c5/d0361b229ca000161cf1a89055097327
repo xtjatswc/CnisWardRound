@@ -1,0 +1,17 @@
+package cn.kancare.mobile.common.constant;
+
+public class SettingCode {
+	public static final String SERVER_IP = "SERVER_IP";// 服务器ip
+	public static final String PATIENT_LIST_ORDER_BY = "PATIENT_LIST_ORDER_BY";// 患者列表排序
+	public static final String APP_MODE = "APP_MODE";// 单机版、内网版
+
+	// 患者列表排序
+	public static final String ORDER_BY_DEPARTMENT = "2"; // 按科室排序
+	public static final String ORDER_BY_BEDNUMBER = ""; // 按床号排序
+	public static final String ORDER_BY_INHOSPITALDATE = "1"; // 按入院日期排序
+	public static final String ORDER_BY_DOCTOR = "3"; // 按临床医生排序
+	
+	// APP模式
+	public static final String APP_MODE_SINGLE = ""; // 单机版
+	public static final String APP_MODE_INNER = "1"; // 内网版
+}

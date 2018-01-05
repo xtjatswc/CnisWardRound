@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dip" >
+
+    <Button
+        android:id="@+id/btnSaveSetting"
+        style="@style/buttonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="保存设置"
+        android:visibility="gone" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:shrinkColumns="1" >
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:weightSum="1" >
+
+            <TextView
+                android:id="@+id/textViewMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:text="模式："
+                android:textSize="25dip" />
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/RadioButtonSingleMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="单机版"
+                    android:textSize="20dip" />
+
+                <RadioButton
+                    android:id="@+id/RadioButtonInnerNetwork"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dip"
+                    android:text="内网版"
+                    android:textSize="20dip" />
+            </RadioGroup>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:weightSum="1" >
+
+            <TextView
+                android:id="@+id/textViewServerIP"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:text="服务器IP："
+                android:textSize="25dip"
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/editTextServerIP"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:digits="1234567890.:"
+                android:hint="ip + 端口号，如 192.168.0.20:8088"
+                android:visibility="gone" >
+            </EditText>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:weightSum="1" >
+
+            <TextView
+                android:id="@+id/textViewServerIP"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:text="患者列表排序："
+                android:textSize="25dip" />
+
+            <cn.kancare.mobile.core.view.FlowRadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/RadioButtonDepartment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="按科室"
+                    android:textSize="20dip" />
+
+                <RadioButton
+                    android:id="@+id/RadioButtonBedNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="按床号"
+                    android:textSize="20dip" />
+
+                <RadioButton
+                    android:id="@+id/RadioButtonInHospitalDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dip"
+                    android:text="按入院日期"
+                    android:textSize="20dip" />
+
+                <RadioButton
+                    android:id="@+id/RadioButtonDoctor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dip"
+                    android:text="按临床医生"
+                    android:textSize="20dip" />
+            </cn.kancare.mobile.core.view.FlowRadioGroup>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:weightSum="1" >
+
+            <TextView
+                android:id="@+id/textViewOrderBy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:text="排序方式："
+                android:textSize="25dip" />
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/RadioButtonAsc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="正序"
+                    android:textSize="20dip" />
+
+                <RadioButton
+                    android:id="@+id/RadioButtonDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dip"
+                    android:text="倒序"
+                    android:textSize="20dip" />
+            </RadioGroup>
+        </TableRow>
+    </TableLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1px"
+        android:layout_marginBottom="5dip"
+        android:layout_marginTop="5dip"
+        android:background="?android:attr/listDivider" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/textViewVersion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="版本号："
+            android:textSize="25dip" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:layout_marginBottom="5dip"
+            android:layout_marginTop="5dip"
+            android:background="?android:attr/listDivider" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/updates"
+            android:textColor="@color/gray"
+            android:textSize="20dip" />
+    </LinearLayout>
+
+</LinearLayout>

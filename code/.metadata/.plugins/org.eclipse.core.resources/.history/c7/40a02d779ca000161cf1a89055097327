@@ -1,0 +1,235 @@
+package cn.kancare.mobile.activity.frame;
+
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.TableRow;
+import android.widget.TextView;
+import cn.kancare.mobile.R;
+import cn.kancare.mobile.bo.basic.SettingBo;
+import cn.kancare.mobile.common.Global;
+import cn.kancare.mobile.common.constant.LogTag;
+import cn.kancare.mobile.common.constant.SettingCode;
+import cn.kancare.mobile.core.util.PopUtil;
+import cn.kancare.mobile.core.view.fragment.BaseFragment;
+
+public class SettingFragment extends BaseFragment {
+	SettingBo settingBo;
+
+	TextView textViewVersion;
+	EditText editTextServerIP;
+	Button btnSaveSetting;
+	TextView textViewServerIP;
+	RadioButton RadioButtonSingleMode;
+	RadioButton RadioButtonInnerNetwork;
+	RadioButton RadioButtonDepartment;
+	RadioButton RadioButtonBedNumber;
+	RadioButton RadioButtonInHospitalDate;
+	RadioButton RadioButtonDoctor;
+	RadioButton RadioButtonAsc;
+	RadioButton RadioButtonDesc;
+	TableRow TableRowMode;
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View settingLayout = super.onCreateView(inflater, container,
+				savedInstanceState);
+
+		try {
+			loadSetting();
+			textViewVersion.setText("版本号：" + Global.version);
+			btnSaveSetting.setOnClickListener(new onClickListener());
+		} catch (Exception e) {
+			doException(e);
+		}
+
+		return settingLayout;
+	}
+
+	private void loadSetting() throws Exception {
+		if (Global.loginUser.getUser_DBKey() == 0) {
+			textViewServerIP.setVisibility(View.VISIBLE);
+			editTextServerIP.setVisibility(View.VISIBLE);
+			btnSaveSetting.setVisibility(View.VISIBLE);
+			TableRowMode.setVisibility(View.VISIBLE);
+		}
+
+		String appMode = settingBo.getSetting(SettingCode.APP_MODE);
+		if (appMode.equals(SettingCode.APP_MODE_SINGLE)) {
+			RadioButtonSingleMode.setChecked(true);
+		} else {
+			RadioButtonInnerNetwork.setChecked(true);
+		}
+
+		editTextServerIP.setText(settingBo.getSetting(SettingCode.SERVER_IP));
+
+		String orderByString = settingBo
+				.getSetting(SettingCode.PATIENT_LIST_ORDER_BY);
+		if (orderByString.equals(SettingCode.ORDER_BY_BEDNUMBER)) {
+			RadioButtonBedNumber.setChecked(true);
+		} else {
+			RadioButtonInHospitalDate.setChecked(true);
+		}
+
+		RadioButtonDepartment
+				.setOnCheckedChangeListener(new onCheckedChangeListener());
+		RadioButtonBedNumber
+				.setOnCheckedChangeListener(new onCheckedChangeListener());
+		RadioButtonInHospitalDate
+				.setOnCheckedChangeListener(new onCheckedChangeListener());
+		RadioButtonDoctor
+				.setOnCheckedChangeListener(new onCheckedChangeListener());
+
+		RadioButtonAsc
+				.setOnCheckedChangeListener(new onCheckedChangeListener2());
+		RadioButtonDesc
+				.setOnCheckedChangeListener(new onCheckedChangeListener2());
+	}
+
+	public class onCheckedChangeListener implements OnCheckedChangeListener {
+
+		public void onCheckedChanged(CompoundButton buttonView,
+				boolean isChecked) {
+			try {
+				saveOrderBy();
+			} catch (Exception e) {
+				doException(e);
+			}
+		}
+
+	}
+
+	public class onCheckedChangeListener2 implements OnCheckedChangeListener {
+
+		public void onCheckedChanged(CompoundButton buttonView,
+				boolean isChecked) {
+			try {
+				saveOrderBy();
+			} catch (Exception e) {
+				doException(e);
+			}
+		}
+
+	}
+
+	class onClickListener implements View.OnClickListener {
+		public void onClick(View v) {
+			try {
+
+				switch (v.getId()) {
+				case R.id.btnSaveSetting:
+
+					saveAppMode();
+
+					String serverIP = editTextServerIP.getText().toString();
+					settingBo.saveSetting(SettingCode.SERVER_IP, serverIP);
+					Global.WEB_REQUEST_IP = serverIP;
+
+					saveOrderBy();
+
+					PopUtil.show(getActivity(), "保存成功！");
+					break;
+
+				default:
+					break;
+				}
+			} catch (Exception e) {
+				doException(e);
+			}
+		}
+
+	}
+
+	@Override
+	protected String getLogTag() {
+		return LogTag.SETTING;
+	}
+
+	public void saveAppMode() throws Exception {
+		if (RadioButtonSingleMode.isChecked()) {
+			settingBo.saveSetting(SettingCode.APP_MODE,
+					SettingCode.APP_MODE_SINGLE);
+			Global.AppMode = SettingCode.APP_MODE_SINGLE;
+		} else {
+			settingBo.saveSetting(SettingCode.APP_MODE,
+					SettingCode.APP_MODE_INNER);
+			Global.AppMode = SettingCode.APP_MODE_INNER;
+		}
+	}
+
+	public void saveOrderBy() throws Exception {
+		if (RadioButtonDepartment.isChecked()) {
+			settingBo.saveSetting(SettingCode.PATIENT_LIST_ORDER_BY,
+					SettingCode.ORDER_BY_DEPARTMENT);
+			Global.PatientListOrderBy = SettingCode.ORDER_BY_DEPARTMENT;
+		} else if (RadioButtonBedNumber.isChecked()) {
+			settingBo.saveSetting(SettingCode.PATIENT_LIST_ORDER_BY,
+					SettingCode.ORDER_BY_BEDNUMBER);
+			Global.PatientListOrderBy = SettingCode.ORDER_BY_BEDNUMBER;
+		} else if (RadioButtonInHospitalDate.isChecked()) {
+			settingBo.saveSetting(SettingCode.PATIENT_LIST_ORDER_BY,
+					SettingCode.ORDER_BY_INHOSPITALDATE);
+			Global.PatientListOrderBy = SettingCode.ORDER_BY_INHOSPITALDATE;
+		} else if (RadioButtonDoctor.isChecked()) {
+			settingBo.saveSetting(SettingCode.PATIENT_LIST_ORDER_BY,
+					SettingCode.ORDER_BY_DOCTOR);
+			Global.PatientListOrderBy = SettingCode.ORDER_BY_DOCTOR;
+		}
+	}
+	
+	public void saveAsc() throws Exception {
+		if (RadioButtonAsc.isChecked()) {
+			settingBo.saveSetting(SettingCode.PATIENT_LIST_ORDER_BY_ASC_DESC,
+					SettingCode.ORDER_BY_ASC);
+			Global.PatientListOrderByAscDesc = SettingCode.ORDER_BY_ASC;
+		} else if (RadioButtonDesc.isChecked()) {
+			settingBo.saveSetting(SettingCode.PATIENT_LIST_ORDER_BY_ASC_DESC,
+					SettingCode.ORDER_BY_DESC);
+			Global.PatientListOrderByAscDesc = SettingCode.ORDER_BY_DESC;
+		}
+	}
+
+	@Override
+	protected void initializeBo() throws Exception {
+		settingBo = new SettingBo(getActivity());
+	}
+
+	@Override
+	protected int getLayoutId() {
+		return R.layout.frame_setting;
+	}
+
+	@Override
+	protected void setView(View layout) throws Exception {
+		textViewServerIP = (TextView) layout
+				.findViewById(R.id.textViewServerIP);
+		editTextServerIP = (EditText) layout
+				.findViewById(R.id.editTextServerIP);
+		btnSaveSetting = (Button) layout.findViewById(R.id.btnSaveSetting);
+		textViewVersion = (TextView) layout.findViewById(R.id.textViewVersion);
+		RadioButtonBedNumber = (RadioButton) layout
+				.findViewById(R.id.RadioButtonBedNumber);
+		RadioButtonInHospitalDate = (RadioButton) layout
+				.findViewById(R.id.RadioButtonInHospitalDate);
+		RadioButtonSingleMode = (RadioButton) layout
+				.findViewById(R.id.RadioButtonSingleMode);
+		RadioButtonInnerNetwork = (RadioButton) layout
+				.findViewById(R.id.RadioButtonInnerNetwork);
+		RadioButtonDepartment = (RadioButton) layout
+				.findViewById(R.id.RadioButtonDepartment);
+		RadioButtonDoctor = (RadioButton) layout
+				.findViewById(R.id.RadioButtonDoctor);
+		RadioButtonAsc = (RadioButton) layout.findViewById(R.id.RadioButtonAsc);
+		RadioButtonDesc = (RadioButton) layout
+				.findViewById(R.id.RadioButtonDesc);
+		TableRowMode = (TableRow) layout.findViewById(R.id.TableRowMode);
+	}
+
+}

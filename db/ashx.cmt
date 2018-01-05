@@ -1,0 +1,65 @@
+﻿<#@ template language="c#" HostSpecific="True" #>
+<#@ output extension= ".cs" #>
+<#
+	TableHost host = (TableHost)(Host);
+	host.Fieldlist.Sort(CodeCommon.CompareByintOrder);
+#>
+
+<%@ WebHandler Language="C#" Class="Handler" %>
+
+using System;
+using System.Web;
+using CNIS.Report.BLL;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using CNIS.Report.Common;
+
+public class Handler : IHttpHandler {
+
+    <#= host.GetModelClass(host.TableName) #> <#= host.GetModelClass(host.TableName) #>BLL = new <#= host.GetModelClass(host.TableName) #>();
+    
+    public void ProcessRequest (HttpContext context) {
+
+
+        string opt = context.Request.QueryString["opt"];
+        string str = "";
+        
+        switch(opt)
+        {
+            case "getlist":
+                {
+                    str = GetList(context);
+                    break;
+                }
+            case "getlistcount":
+                {
+                    str = GetListCount(context);
+                    break;
+                }
+        }
+
+        Global.ResponseJsonString(context, str);
+    }
+
+    private string GetList(HttpContext context)
+    {
+        string strWhere = "";
+        string limit = context.Request.QueryString["limitStart"] + "," + context.Request.QueryString["limitSize"];
+        string orderBy = " <#=CodeCommon.GetFieldstrlist(host.Keys, true)#> desc";
+        string str = JsonConvert.SerializeObject(<#= host.GetModelClass(host.TableName) #>BLL.GetModelList(strWhere, limit, orderBy), Global.GetJsonFormatting(context), Global.jsonSerializerSettings);
+        return str;
+    }
+
+    private string GetListCount(HttpContext context)
+    {
+        string str = <#= host.GetModelClass(host.TableName) #>BLL.GetListCount();
+        return str;
+    }
+
+    public bool IsReusable {
+        get {
+            return false;
+        }
+    }
+
+}

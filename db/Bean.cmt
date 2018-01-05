@@ -1,0 +1,69 @@
+﻿<#@ template language="c#" HostSpecific="True" #>
+<#@ output extension= ".cs" #>
+<#
+	TableHost host = (TableHost)(Host);
+	host.Fieldlist.Sort(CodeCommon.CompareByintOrder);
+	string fields = "";
+#>
+
+package cn.kancare.mobile.bean; 
+
+import java.sql.Date;
+import java.io.Serializable;
+import com.j256.ormlite.field.DatabaseField;  
+import com.j256.ormlite.table.DatabaseTable;  
+  
+@DatabaseTable(tableName = "<#= host.GetModelClass(host.TableName) #>")  
+public class <#= host.GetModelClass(host.TableName) #>  implements Serializable  
+{     
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3278786409890674018L;
+        <# foreach (ColumnInfo c in host.Fieldlist)
+		{ #>
+		// <#= string.IsNullOrEmpty(c.Description) ? c.ColumnName : c.Description #>	
+        <# string type = "";
+        if(CodeCommon.DbTypeToCS(c.TypeName) == "string") {type = "String";}
+        else if(CodeCommon.DbTypeToCS(c.TypeName) == "decimal") {type = "Double";}
+        else if(CodeCommon.DbTypeToCS(c.TypeName) == "DateTime") {type = "String";}  
+        else {type = CodeCommon.DbTypeToCS(c.TypeName);}
+        
+        string primary = "";
+        if(c.IsPrimaryKey){primary = ",id=true";}
+        #>
+		@DatabaseField(columnName = "<#= c.ColumnName#>"<#= primary #>)  
+        private <#= type #> <#= c.ColumnName #>;     
+        
+		<# } #>
+		
+		<# foreach (ColumnInfo c in host.Fieldlist)
+		{ #>
+		<# string type = "";
+        if(CodeCommon.DbTypeToCS(c.TypeName) == "string") {type = "String";}
+        else if(CodeCommon.DbTypeToCS(c.TypeName) == "decimal") {type = "Double";}
+        else if(CodeCommon.DbTypeToCS(c.TypeName) == "DateTime") {type = "String";}    
+        else {type = CodeCommon.DbTypeToCS(c.TypeName);}
+        #>
+		public <#= type #> get<#= c.ColumnName #>()  
+    	{  
+        	return <#= c.ColumnName #>;  
+   		}  
+  
+	    public void set<#= c.ColumnName #>(<#= type #> <#= c.ColumnName #>)  
+	    {  
+	        this.<#= c.ColumnName #> = <#= c.ColumnName #>;  
+	    }
+	    
+		<# 
+		fields += c.ColumnName + "=\" + " + c.ColumnName + " + \",";
+		} #>
+		
+		@Override  
+	    public String toString()  
+	    {  
+	        return "<#= host.GetModelClass(host.TableName) #> [<#= fields#>]";  
+	    } 
+}
+
+
